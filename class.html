@@ -9,21 +9,21 @@
 <body>
     <div><br><br></div>
     <div class="container-lg">
-    <div class="row">
-        <label for="ddlclass">class:</label>
-    <div class="col-md-3">
-     
-       <input type="text" id="ddlclass" class="form-control">
-    </div>
+        <div class="row">
+            <label for="ddlclass">class:</label>
+            <div class="col-md-3">
 
-    <div class="col-md-3">
-        <input type="button" id="btnclass" value="save" class="btn btn-success">
-    </div>
-    <div class="col-md-3">
-        <select class="form-control" id="dropdownclass">
-        </select>
-    </div>
-    </div>
+                <input type="text" id="ddlclass" class="form-control">
+            </div>
+
+            <div class="col-md-3">
+                <input type="button" id="btnclass" value="save" class="btn btn-success">
+            </div>
+            <div class="col-md-3">
+                <select class="form-control" id="dropdownclass">
+                </select>
+            </div>
+        </div>
     </div>
 </body>
 <script src="jquery-3.5.1.min.js"></script>
@@ -45,25 +45,24 @@
                     } else {
                         alert('Record not saved');
                     }
-                  dropdown();
+                    dropdown();
                 }
-            })
+            });
             $("#ddlclass").val("")
-
         })
         dropdown();
-        function dropdown(){
-        $.ajax({
-            url:"http://localhost:3000/dropdownclassdetails",
-            type:"GET",
-            complete:function(result){
-                var dropdownclass=""
-               $.each(result.responseJSON,function(i,v){
-                        dropdownclass+="<option>"+v.class+"</option>"
+        function dropdown() {
+            $.ajax({
+                url: "http://localhost:3000/dropdownclassdetails",
+                type: "GET",
+                complete: function (result) {
+                    var dropdownclass = ""
+                    $.each(result.responseJSON, function (i, v) {
+                        dropdownclass += "<option value='"+v._id+"'>" + v.class + "</option>"
                     })
-                    $("#dropdownclass").html(dropdownclass)   
-            }
-        })
+                    $("#dropdownclass").html(dropdownclass)
+                }
+            })
         }
     })
 </script>
