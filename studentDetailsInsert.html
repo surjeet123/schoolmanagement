@@ -35,10 +35,7 @@
 
         <label for="class">Class:</label>
         <select name="studenclass" class="form-control " id="studentclass">
-            <option value="1">I</option>
-            <option value="2">II</option>
-            <option value="3">III</option>
-            <option value="4">IV</option>
+
         </select><br><br>
 
         <div class="input-group input-group-sm mb-3" s>
@@ -83,7 +80,7 @@
                     class: $("#studentclass").val(),
                     address: $("#studentaddress").val(),
                     religion: $("#studentreligion").val(),
-                    postalcode:$("#studentpostalcode").val()
+                    postalcode: $("#studentpostalcode").val()
 
                 }
                 $.ajax({
@@ -107,8 +104,19 @@
                 $("#studentreligion").val("")
                 $("#studentpostalcode").val("")
             })
-                
-           
+            $.ajax({
+                url: "http://localhost:3000/dropdownclassstudent",
+                type: "GET",
+                complete: function (result) {
+                    var stdclass = ""
+                    $.each(result.responseJSON, function (i, v) {
+                        stdclass += "<option value='" + v._id + "'>" + v.class + "</option>"
+                    })
+                    $("#studentclass").html(stdclass)
+                }
+            })
+
+
         })
     </script>
     </div>
