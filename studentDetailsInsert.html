@@ -50,7 +50,7 @@
 
         <label for="Religion">Religion:</label>
         <select name="religion" class="form-control" id="studentreligion">
-        
+
         </select><br><br>
 
         <div class="input-group input-group-sm mb-3" s>
@@ -113,12 +113,12 @@
                 }
             })
             $.ajax({
-                url:"http://localhost:3000/religionstudent",
-                type:"GET",
-                complete:function(result){
-                    var religionstudent=""
-                    $.each(result.responseJSON,function(i,v){
-                        religionstudent="<option value='" + v._id + "'>"+v.religion+"</option>"
+                url: "http://localhost:3000/religionstudent",
+                type: "GET",
+                complete: function (result) {
+                    var religionstudent = ""
+                    $.each(result.responseJSON, function (i, v) {
+                        religionstudent += "<option value='" + v._id + "'>" + v.religion + "</option>"
                     })
                     $("#studentreligion").html(religionstudent)
                 }
