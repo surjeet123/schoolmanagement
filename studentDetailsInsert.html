@@ -118,7 +118,7 @@
                 complete:function(result){
                     var religionstudent=""
                     $.each(result.responseJSON,function(i,v){
-                        religionstudent="<option>"+v.religion+"</option>"
+                        religionstudent="<option value='" + v._id + "'>"+v.religion+"</option>"
                     })
                     $("#studentreligion").html(religionstudent)
                 }
