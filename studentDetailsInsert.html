@@ -50,10 +50,7 @@
 
         <label for="Religion">Religion:</label>
         <select name="religion" class="form-control" id="studentreligion">
-            <option value="hindu">hindu</option>
-            <option value="christian">christian</option>
-            <option value="muslim">muslim</option>
-            <option value="sikh">sikh</option>
+        
         </select><br><br>
 
         <div class="input-group input-group-sm mb-3" s>
@@ -114,6 +111,18 @@
                     })
                     $("#studentclass").html(stdclass)
                 }
+            })
+            $.ajax({
+                url:"http://localhost:3000/religionstudent",
+                type:"GET",
+                complete:function(result){
+                    var religionstudent=""
+                    $.each(result.responseJSON,function(i,v){
+                        religionstudent="<option>"+v.religion+"</option>"
+                    })
+                    $("#studentreligion").html(religionstudent)
+                }
+
             })
 
 

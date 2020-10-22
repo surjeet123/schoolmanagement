@@ -23,6 +23,19 @@
                 <select class="form-control" id="dropdownclass">
                 </select>
             </div>
+
+        </div>
+
+        <div><br><br></div>
+        <div class="row">
+            <label for="ddlclass">religion:</label>
+            <div class="col-md-3">
+                <input type="text" id="religion" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <input type="button" id="btnreligion" value="save" class="btn btn-success">
+            </div>
+
         </div>
     </div>
 </body>
@@ -58,12 +71,32 @@
                 complete: function (result) {
                     var dropdownclass = ""
                     $.each(result.responseJSON, function (i, v) {
-                        dropdownclass += "<option value='"+v._id+"'>" + v.class + "</option>"
+                        dropdownclass += "<option value='" + v._id + "'>" + v.class + "</option>"
                     })
                     $("#dropdownclass").html(dropdownclass)
                 }
             })
         }
+        $("#btnreligion").click(function () {
+            var religion = {
+                religion: $("#religion").val()
+            }
+            $.ajax({
+                url: "http://localhost:3000/religionstudentinsert",
+                type: "POST",
+                data: JSON.stringify(religion),
+                contentType: 'application/json; charset=utf-8',
+                complete: function (result) {
+                    if (result.responseText == "true") {
+                        alert('record saved successfully')
+                    } else {
+                        alert('Record not saved');
+                    }
+                
+                }
+            })
+            $("#ddlclass").val("")
+        })
     })
 </script>
 
