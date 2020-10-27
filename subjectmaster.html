@@ -12,13 +12,14 @@
         <input type="text" id="subject" class="form-control">
         <label for="">subject code</label>
         <input type="text" id="subcode" class="form-control"><br>
+        <input type="hidden" id="hdnSubjectID" value="0">
     </div>
     <div class="col-md-3">
         <input type="button" name="btnsave" value="save" id="btnsave" class="btn btn-primary">
     </div>
 
 
-    <table id="tablesub" class="col">
+    <table id="tablesub" class="table">
         <thead>
             <tr>
                 <th>subject</th>
@@ -40,8 +41,13 @@
                     subject: $("#subject").val(),
                     subjectcode: $("#subcode").val()
                 }
+                var url = "http://localhost:3000/subjectmaster";
+                if ($('#hdnSubjectID').val() != "0") {
+                    url = "http://localhost:3000/updatesubjectbyid";
+                    subjectmaster.id = $('#hdnSubjectID').val();
+                }
                 $.ajax({
-                    url: "http://localhost:3000/subjectmaster",
+                    url: url,
                     type: "POST",
                     data: JSON.stringify(subjectmaster),
                     contentType: 'application/json; charset=utf-8',
@@ -52,6 +58,8 @@
                 })
                 $("#subject").val("")
                 $("#subcode").val("")
+                $('#hdnSubjectID').val(0);
+               
             })
 
             function subjectdetails() {
@@ -64,7 +72,8 @@
                             subjectdetails += "<tr>"
                             subjectdetails += "<td>" + v.subject + "</td>"
                             subjectdetails += "<td>" + v.subjectcode + "</td>"
-                            subjectdetails += "<td> <input type='button' value='delete' class='btndelete' id='" + v._id + "'></td>"
+                            subjectdetails += "<td> <input type='button' value='delete' class='btndelete' id='" + v._id + "'>"
+                            subjectdetails += "<input type='button' value='edit' class='btnedit' id='" + v._id + "'></td>"
                             subjectdetails += "</tr>"
                         })
                         $("#tablesub").find("tbody").html(subjectdetails)
@@ -78,10 +87,20 @@
                     url: "http://localhost:3000/subjectmasterdelete/?id=" + id,
                     type: "DELETE",
                     complete: function (result) {
-                      
+                    }
+                })
+            })
+            $("body").on("click", ".btnedit", function () {
+                var id = $(this).attr('id')
+                $.ajax({
+                    url: "http://localhost:3000/subjectdetailsbyid/?id=" + id,
+                    type: "GET",
+                    complete: function (result) {
+                        $("#subject").val(result.responseJSON.subject)
+                        $("#subcode").val(result.responseJSON.subjectcode)
+                        $('#hdnSubjectID').val(result.responseJSON._id);
 
                     }
-
                 })
             })
         })
