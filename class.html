@@ -12,90 +12,82 @@
         <div class="row">
             <label for="ddlclass">class:</label>
             <div class="col-md-3">
-
                 <input type="text" id="ddlclass" class="form-control">
+                <input type="hidden" id="hdnclassID" value="0">
             </div>
 
             <div class="col-md-3">
                 <input type="button" id="btnclass" value="save" class="btn btn-success">
             </div>
-            <div class="col-md-3">
-                <select class="form-control" id="dropdownclass">
-                </select>
-            </div>
-
-        </div>
-
-        <div><br><br></div>
-        <div class="row">
-            <label for="ddlclass">religion:</label>
-            <div class="col-md-3">
-                <input type="text" id="religion" class="form-control">
-            </div>
-            <div class="col-md-3">
-                <input type="button" id="btnreligion" value="save" class="btn btn-success">
-            </div>
-
         </div>
     </div>
+    <div><br><br><br></div>
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th>class</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+
+    </table>
+
 </body>
 <script src="jquery-3.5.1.min.js"></script>
 
 <script>
     $(document).ready(function () {
+        stdclass();
         $("#btnclass").click(function () {
             var subclass = {
                 class: $("#ddlclass").val()
             }
+            var url = "http://localhost:3000/stdclass";
+            if ($("#hdnclassID").val() != "0") {
+                url = "http://localhost:3000/updateclassbyid";
+                subclass.id = $("#hdnclassID").val()
+            }
             $.ajax({
-                url: "http://localhost:3000/stdclass",
+                url: url,
                 type: "POST",
                 data: JSON.stringify(subclass),
                 contentType: 'application/json; charset=utf-8',
                 complete: function (result) {
-                    if (result.responseText == "true") {
-                        alert('record saved successfully')
-                    } else {
-                        alert('Record not saved');
-                    }
-                    dropdown();
+                  
+                    stdclass()
                 }
-            });
+            })
             $("#ddlclass").val("")
+            $('#hdnSubjectID').val(0)
         })
-        dropdown();
-        function dropdown() {
+        function stdclass() {
             $.ajax({
                 url: "http://localhost:3000/dropdownclassdetails",
                 type: "GET",
                 complete: function (result) {
-                    var dropdownclass = ""
+                    var stdclass = ""
                     $.each(result.responseJSON, function (i, v) {
-                        dropdownclass += "<option value='" + v._id + "'>" + v.class + "</option>"
+                        stdclass += "<tr>"
+                        stdclass += "<td>" + v.class + "</td>"
+                        stdclass += "<td> <input type='button' value='EDIT' class='btnedit' id='" + v._id + "'></td>"
+                        stdclass += "</tr>"
                     })
-                    $("#dropdownclass").html(dropdownclass)
+                    $(".table").find("tbody").html(stdclass)
                 }
             })
         }
-        $("#btnreligion").click(function () {
-            var religion = {
-                religion: $("#religion").val()
-            }
+        $("body").on("click", ".btnedit", function () {
+            var id=$(this).attr('id')
             $.ajax({
-                url: "http://localhost:3000/religionstudentinsert",
-                type: "POST",
-                data: JSON.stringify(religion),
-                contentType: 'application/json; charset=utf-8',
+                url: "http://localhost:3000/classdetailbyid/?id=" + id,
+                type: "GET",
                 complete: function (result) {
-                    if (result.responseText == "true") {
-                        alert('record saved successfully')
-                    } else {
-                        alert('Record not saved');
-                    }
-                
+                  $("#ddlclass").val(result.responseJSON.class)
+                  $("#hdnclassID").val(result.responseJSON._id)
                 }
             })
-            $("#ddlclass").val("")
         })
     })
 </script>
