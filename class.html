@@ -47,7 +47,7 @@
             var url = "http://localhost:3000/stdclass";
             if ($("#hdnclassID").val() != "0") {
                 url = "http://localhost:3000/updateclassbyid";
-                subclass.id = $("#hdnclassID").val()
+                subclass.id = $("#hdnclassID").val();
             }
             $.ajax({
                 url: url,
@@ -60,7 +60,7 @@
                 }
             })
             $("#ddlclass").val("")
-            $('#hdnSubjectID').val(0)
+            $('#hdnclassID').val(0);
         })
         function stdclass() {
             $.ajax({

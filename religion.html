@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+</head>
+
+<body>
+    <div><br><br></div>
+    <div class="container-lg">
+    <div class="row">
+        <label for="ddlclass">religion:</label>
+        <div class="col-md-3">
+            <input type="text" id="religion" class="form-control">
+            <input type="hidden" id="hdnReligionToSaveID" value="0">
+        </div>
+        <div class="col-md-3">
+            <input type="button" id="btnreligion" value="save" class="btn btn-success">
+        </div>
+    </div>
+    </div>
+    <TABLE class="table">
+        <thead class="thead thead-dark">
+            <TR>
+                <th>religion</th>
+            </TR>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </TABLE>
+    <script src="jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            religiondetail();
+            $("#btnreligion").click(function () {
+                var religion = {
+                    religion: $("#religion").val()
+                }
+                var url= "http://localhost:3000/religionstudentinsert";
+                if( $("#hdnReligionToSaveID").val()!="0"){
+                    url="http://localhost:3000/religionupdatebyid"
+                    religion.id=$("#hdnReligionToSaveID").val()
+                }
+                $.ajax({
+                    url:url,
+                    type: "POST",
+                    data: JSON.stringify(religion),
+                    contentType: 'application/json; charset=utf-8',
+                    complete: function (result) {
+                        if (result.responseText == "true") {
+                            alert('record saved successfully')
+                        } else {
+                            alert('Record not saved');
+                        }
+                        religiondetail()
+                    }
+
+                })
+                $("#religion").val("")
+                $("#hdnReligionToSaveID").val(0)
+            })
+            function religiondetail() {
+                $.ajax({
+                    url: "http://localhost:3000/religionstudent",
+                    type: "GET",
+                    complete: function (result) {
+                        var religion = ""
+                        $.each(result.responseJSON, function (i, v) {
+                            religion += "<tr>"
+                            religion += "<td>" + v.religion + "</td>"
+                            religion += "<td> <input type='button' class='btnupdatereligion' value='updaterecord' id='" + v._id + "'></td>"
+                            religion += "</tr>"
+                        })
+                        $(".table").find("tbody").html(religion)
+                    }
+                })
+            }
+            $("body").on("click", ".btnupdatereligion", function () {
+                var id = $(this).attr('id')
+                $.ajax({
+                    url: "http://localhost:3000/religiondetailstextbox/?id=" + id,
+                    type: "GET",
+                    complete: function (result) {
+                        $("#religion").val(result.responseJSON.religion)
+                        $("#hdnReligionToSaveID").val(result.responseJSON._id)
+                    }
+                })
+            })
+        })
+    </script>
+
+</body>
+
+</html>
